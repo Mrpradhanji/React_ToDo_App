@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+
+import React, { useEffect, useState } from 'react'
 import { TodoProvider } from './contexts'
+import { useEffect } from 'react'
 
 function App() {
   const [todos,setTodos] = useState([]) //by default empty array
@@ -27,6 +29,22 @@ function App() {
     setTodos((prev)=>prev.map((prevTodo)=> prevTodo === id ? 
     {...prevTodo , completed:!prevTodo.completed}:prevTodo))
   }
+  /*************************************************************** */
+ //useEffect is a React Hook that lets you synchronize a component with an external system.
+
+  useEffect(()=>{
+    //local storage gives data in string format so we have to convert it into JSON format so 
+    //Json.parse is used here
+    JSON.parse(localStorage.getItem("todos"))
+
+    if(todos && todos.length > 0){
+        setTodos(todos)
+    }
+  },[])
+
+  useEffect(()=>{
+    localStorage.setItem("todos",JSON.stringify(todos))
+  },[todos])
 
   return (
     <TodoProvider value={{todos,addTodo,updatedTodo,deleteTodo,toggleCompleted}}>
